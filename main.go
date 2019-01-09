@@ -29,7 +29,7 @@ var (
 )
 
 func main() {
-	extract("./", ".", 0, 0, false)
+	extract("./", os.Args[1], 0, 0, false)
 }
 
 func extract(filePath, fileName string, depth, width int, tail bool) {
