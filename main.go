@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+///////////// Sample Outputs
 //  $ tree .
 //  .
 //  ├── dir1
@@ -17,13 +18,6 @@ import (
 //  │   └── file2
 //  └── file1
 
-type file struct {
-	name  string
-	depth int
-	width int
-	files []file
-}
-
 const (
 	charMiddle = "├── "
 	charBottom = "└── "
@@ -31,31 +25,28 @@ const (
 )
 
 var (
-	rows         = []string{}
 	depth, width int
 )
 
 func main() {
 	extract("./", ".", 0, 0, false)
-	for _, row := range rows {
-		fmt.Println(row)
-	}
 }
 
-func extract(filePath, fileName string, depth, width int, tail bool) file {
+func extract(filePath, fileName string, depth, width int, tail bool) {
 	fullName := filePath + fileName
-	n := file{name: fileName, depth: depth, width: width, files: []file{}}
-	//todo: filename trim or better way
-	rows = append(rows, line(fileName, depth, width, tail))
+
+	fmt.Println(line(fileName, depth, width, tail))
+
 	info, err := os.Stat(fullName)
 	if err != nil {
 		panic(err)
 	}
-	if !info.IsDir() {
-		return n
-	}
 
+	if !info.IsDir() {
+		return
+	}
 	width += 1
+
 	fs, err := ioutil.ReadDir(fullName)
 	if err != nil {
 		panic(err)
@@ -65,10 +56,10 @@ func extract(filePath, fileName string, depth, width int, tail bool) file {
 		if i == len(fs)-1 {
 			tail = true
 		}
-		n.files = append(n.files, extract(fullName+"/", f.Name(), depth+1, width, tail))
+		extract(fullName+"/", f.Name(), depth+1, width, tail)
 	}
 	width -= 1
-	return n
+	return
 }
 
 func line(name string, depth, width int, tail bool) string {
