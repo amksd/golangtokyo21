@@ -21,7 +21,7 @@ import (
 const (
 	charMiddle = "├── "
 	charBottom = "└── "
-	charFill   = "│  "
+	charFill   = "│   "
 )
 
 var (
@@ -33,10 +33,9 @@ func main() {
 }
 
 func extract(filePath, fileName string, depth, width int, tail bool) {
-	fullName := filePath + fileName
-
 	fmt.Println(line(fileName, depth, width, tail))
 
+	fullName := filePath + fileName
 	info, err := os.Stat(fullName)
 	if err != nil {
 		panic(err)
